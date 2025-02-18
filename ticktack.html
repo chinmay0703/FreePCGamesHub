@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Tic Tac Toe with Unbeatable AI built with HTML, CSS, and JavaScript. Play an advanced Tic Tac Toe game at Free PC Games Hub." />
+  <meta name="keywords" content="Tic Tac Toe, Unbeatable AI, JavaScript, HTML, CSS, Game, Free PC Games Hub, free games" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Open Graph / Facebook Meta Tags -->
+  <meta property="og:url" content="https://free-pc-games-hub.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tic Tac Toe - Unbeatable AI" />
+  <meta property="og:description" content="Play Tic Tac Toe with an unbeatable AI on Free PC Games Hub. Enjoy high-level gameplay built with HTML, CSS, and JavaScript." />
+  <meta property="og:image" content="https://free-pc-games-hub.vercel.app/" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://free-pc-games-hub.vercel.app/" />
+  <meta name="twitter:title" content="Tic Tac Toe - Unbeatable AI" />
+  <meta name="twitter:description" content="Play Tic Tac Toe with an unbeatable AI on Free PC Games Hub. Enjoy high-level gameplay built with HTML, CSS, and JavaScript." />
+  <meta name="twitter:image" content="https://free-pc-games-hub.vercel.app/" />
+  
+  <!-- Canonical Link -->
+  <link rel="canonical" href="https://free-pc-games-hub.vercel.app/" />
+
+  <title>Unbeatable AI</title>
+  <script>
+    console.log(window.location.hostname,"window.location.hostname")
+    if (window.location.hostname !="127.0.0.1") {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);
+        t.async=1;
+        t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
+        y=l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "qamyos4a9i");
+    }
+  </script>
+  <style>
+    /* Reset & basic styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .game-container {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+      margin: 0 auto;
+    }
+    .cell {
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.3s;
+      user-select: none;
+    }
+    .cell:hover {
+      background: #e0e0e0;
+    }
+    .status {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Unbeatable AI</h1>
+    <div class="board" id="board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+    <div class="status" id="status"></div>
+    <button id="restartBtn">Restart Game</button>
+  </div>
+
+  <script>
+    // Get DOM elements
+    const boardElem = document.getElementById('board');
+    const statusElem = document.getElementById('status');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // Game variables
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let gameOver = false;
+    const human = 'X';
+    const ai = 'O';
+
+    // Winning combinations for Tic Tac Toe
+    const winCombos = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    // Check for a win by the given player
+    function checkWin(brd, player) {
+      return winCombos.some(combo => combo.every(index => brd[index] === player));
+    }
+
+    // Check if the board is full
+    function isBoardFull(brd) {
+      return brd.every(cell => cell !== '');
+    }
+
+    // Update the UI board based on the board array
+    function updateBoard() {
+      document.querySelectorAll('.cell').forEach(cell => {
+        const index = cell.getAttribute('data-index');
+        cell.textContent = board[index];
+      });
+    }
+
+    // Minimax algorithm for unbeatable AI
+    function minimax(newBoard, player) {
+      // Get available spots
+      const availSpots = newBoard.reduce((acc, val, idx) => {
+        if (val === '') acc.push(idx);
+        return acc;
+      }, []);
+
+      if (checkWin(newBoard, human)) {
+        return { score: -10 };
+      } else if (checkWin(newBoard, ai)) {
+        return { score: 10 };
+      } else if (availSpots.length === 0) {
+        return { score: 0 };
+      }
+
+      let moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        let move = {};
+        move.index = availSpots[i];
+        newBoard[availSpots[i]] = player;
+
+        if (player === ai) {
+          let result = minimax(newBoard, human);
+          move.score = result.score;
+        } else {
+          let result = minimax(newBoard, ai);
+          move.score = result.score;
+        }
+
+        newBoard[availSpots[i]] = '';
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (player === ai) {
+        let bestScore = -Infinity;
+        for (let move of moves) {
+          if (move.score > bestScore) {
+            bestScore = move.score;
+            bestMove = move;
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let move of moves) {
+          if (move.score < bestScore) {
+            bestScore = move.score;
+            bestMove = move;
+          }
+        }
+      }
+      return bestMove;
+    }
+
+    // AI move using minimax algorithm
+    function aiMove() {
+      const bestSpot = minimax(board.slice(), ai).index;
+      board[bestSpot] = ai;
+      updateBoard();
+      if (checkWin(board, ai)) {
+        statusElem.textContent = 'You Lose!';
+        gameOver = true;
+      } else if (isBoardFull(board)) {
+        statusElem.textContent = 'Tie Game!';
+        gameOver = true;
+      }
+    }
+
+    // Handle human move when clicking a cell
+    boardElem.addEventListener('click', (e) => {
+      if (!gameOver && e.target.classList.contains('cell')) {
+        const index = e.target.getAttribute('data-index');
+        if (board[index] === '') {
+          board[index] = human;
+          updateBoard();
+          if (checkWin(board, human)) {
+            statusElem.textContent = 'You Win!';
+            gameOver = true;
+            return;
+          } else if (isBoardFull(board)) {
+            statusElem.textContent = 'Tie Game!';
+            gameOver = true;
+            return;
+          }
+          // AI's turn
+          aiMove();
+        }
+      }
+    });
+
+    // Restart game
+    restartBtn.addEventListener('click', () => {
+      board = ['', '', '', '', '', '', '', '', ''];
+      gameOver = false;
+      statusElem.textContent = '';
+      updateBoard();
+    });
+
+    // Initial board update
+    updateBoard();
+  </script>
+</body>
+</html>
