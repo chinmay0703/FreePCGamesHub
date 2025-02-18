@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Motor Racing Game - Enjoy a fast-paced motor racing game built with HTML, CSS, and JavaScript. Dodge obstacles and score high!" />
+  <meta name="keywords" content="Motor Racing, Racing Game, HTML Game, JavaScript, CSS, Car Racing, Obstacle Dodge, Free PC Games Hub" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Open Graph / Facebook Meta Tags -->
+  <meta property="og:url" content="https://free-pc-games-hub.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Motor Racing Game" />
+  <meta property="og:description" content="Enjoy a fast-paced motor racing game built with HTML, CSS, and JavaScript. Dodge obstacles and score high!" />
+  <meta property="og:image" content="https://free-pc-games-hub.vercel.app/" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://free-pc-games-hub.vercel.app/" />
+  <meta name="twitter:title" content="Motor Racing Game" />
+  <meta name="twitter:description" content="Enjoy a fast-paced motor racing game built with HTML, CSS, and JavaScript. Dodge obstacles and score high!" />
+  <meta name="twitter:image" content="https://free-pc-games-hub.vercel.app/" />
+  
+  <!-- Canonical Link -->
+  <link rel="canonical" href="https://free-pc-games-hub.vercel.app/" />
+
+  <title>Motor Racing Game</title>
+  <style>
+    /* Basic reset and styling */
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    #gameCanvas {
+      background: #222;
+      border: 2px solid #fff;
+      display: block;
+    }
+    .info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+    }
+    .info h1 {
+      margin: 0 0 5px;
+    }
+    .info p {
+      margin: 5px 0;
+    }
+    .info button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <h1>Motor Racing Game</h1>
+    <p>Use Left & Right Arrow keys to move.</p>
+    <p id="scoreDisplay">Score: 0</p>
+    <p id="gameStatus"></p>
+    <button id="restartBtn" style="display:none;">Restart Game</button>
+  </div>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <script>
+    // Get DOM elements
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const gameStatus = document.getElementById("gameStatus");
+    const restartBtn = document.getElementById("restartBtn");
+
+    let score = 0;
+    let gameOver = false;
+    let animationId;
+
+    // Car properties
+    const carWidth = 50;
+    const carHeight = 100;
+    let carX = canvas.width / 2 - carWidth / 2;
+    const carY = canvas.height - carHeight - 10;
+    const carSpeed = 5;
+    let moveLeft = false;
+    let moveRight = false;
+
+    // Obstacles properties
+    let obstacles = [];
+    const obstacleWidth = 50;
+    const obstacleHeight = 100;
+    const obstacleSpeed = 4;
+    const obstacleInterval = 1500; // in milliseconds
+
+    // Create new obstacle at a random x-position
+    function createObstacle() {
+      const x = Math.random() * (canvas.width - obstacleWidth);
+      const obstacle = { x: x, y: -obstacleHeight, width: obstacleWidth, height: obstacleHeight };
+      obstacles.push(obstacle);
+    }
+
+    let obstacleTimer = setInterval(createObstacle, obstacleInterval);
+
+    // Draw the player's car
+    function drawCar() {
+      ctx.fillStyle = "red";
+      ctx.fillRect(carX, carY, carWidth, carHeight);
+    }
+
+    // Draw all obstacles
+    function drawObstacles() {
+      ctx.fillStyle = "blue";
+      obstacles.forEach(obstacle => {
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+      });
+    }
+
+    // Update obstacles' positions and remove off-screen obstacles
+    function updateObstacles() {
+      obstacles.forEach(obstacle => {
+        obstacle.y += obstacleSpeed;
+      });
+      obstacles = obstacles.filter(obstacle => obstacle.y < canvas.height);
+    }
+
+    // Collision detection between two rectangles
+    function detectCollision(rect1, rect2) {
+      return rect1.x < rect2.x + rect2.width &&
+             rect1.x + rect1.width > rect2.x &&
+             rect1.y < rect2.y + rect2.height &&
+             rect1.y + rect1.height > rect2.y;
+    }
+
+    // Increase score over time
+    function updateScore() {
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+    }
+
+    // Main game loop
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the road (background and lane lines)
+      ctx.fillStyle = "#444";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([20, 15]);
+      for (let i = 100; i < canvas.width; i += 100) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      drawCar();
+      drawObstacles();
+      updateObstacles();
+
+      // Move the car based on user input
+      if (moveLeft && carX > 0) {
+        carX -= carSpeed;
+      }
+      if (moveRight && carX < canvas.width - carWidth) {
+        carX += carSpeed;
+      }
+
+      // Check for collisions with any obstacle
+      for (const obstacle of obstacles) {
+        if (detectCollision({ x: carX, y: carY, width: carWidth, height: carHeight }, obstacle)) {
+          gameOver = true;
+          gameStatus.textContent = "Game Over!";
+          restartBtn.style.display = "block";
+          cancelAnimationFrame(animationId);
+          clearInterval(obstacleTimer);
+          return;
+        }
+      }
+
+      updateScore();
+      animationId = requestAnimationFrame(gameLoop);
+    }
+
+    // Event listeners for arrow keys
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") moveLeft = true;
+      if (e.key === "ArrowRight") moveRight = true;
+    });
+    document.addEventListener("keyup", (e) => {
+      if (e.key === "ArrowLeft") moveLeft = false;
+      if (e.key === "ArrowRight") moveRight = false;
+    });
+
+    // Restart game on button click
+    restartBtn.addEventListener("click", () => {
+      score = 0;
+      gameOver = false;
+      obstacles = [];
+      carX = canvas.width / 2 - carWidth / 2;
+      gameStatus.textContent = "";
+      restartBtn.style.display = "none";
+      obstacleTimer = setInterval(createObstacle, obstacleInterval);
+      gameLoop();
+    });
+
+    // Start the game
+    gameLoop();
+  </script>
+</body>
+</html>
