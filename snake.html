@@ -20,6 +20,7 @@
   <meta name="twitter:description" content="Play the Classic Snake Game online at Free PC Games Hub. Enjoy addictive gameplay and a nostalgic arcade experience built with HTML, CSS, and JavaScript." />
   <meta name="twitter:image" content="https://free-pc-games-hub.vercel.app/" />
   <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/logo-design-technology-company-vector-illustration_1253202-7559.jpg?semt=ais_hybrid">
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Canonical Link -->
   <link rel="canonical" href="https://free-pc-games-hub.vercel.app/" />
@@ -70,10 +71,48 @@
 </head>
 <body>
   <h1>Classic Snake Game</h1>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <nav class="fixed top-0 z-50 bg-white border-gray-200 dark:bg-gray-900 w-full">
+    <div class="flex flex-wrap items-center justify-between mx-3 py-2">
+      <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <img src="https://img.freepik.com/premium-vector/logo-design-technology-company-vector-illustration_1253202-7559.jpg?semt=ais_hybrid" class="h-10" alt="Flowbite Logo" />
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span>
+      </a>
+      <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+      </button>
+      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+        <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 mr-10 border border-gray-100 rounded-lg bg-white md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <li>
+            <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-black md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
+          </li>
+          <li>
+            <a href="blogs.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Blogs</a>
+          </li>
+          <li>
+            <a href="brickgame.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Brick Game</a>
+          </li>
+          <li>
+            <a href="ticktack.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">TickTack Game</a>
+          </li>
+            <li>
+            <a href="carrace.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Car Race Game</a>
+          </li>
+           <li>
+            <a href="snake.html" class="cursor-pointer block py-2 px-3 text-blue-700 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Classical Snake Game</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <canvas id="gameCanvas" class="mt-10" width="400" height="400"></canvas>
   <div class="info">
     <p id="score">Score: 0</p>
-    <button id="restartBtn" style="display:none;">Restart Game</button>
+    <button id="restartBtn" style="display:none;" class="p-3 hover:text-black">Restart Game</button>
   </div>
   
   <script>
