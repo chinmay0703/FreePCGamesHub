@@ -5,14 +5,12 @@
   <meta name="description" content="Play the Classic Snake Game - Enjoy an addictive classic Snake game built with HTML, CSS, and JavaScript at Free PC Games Hub." />
   <meta name="keywords" content="Snake Game, Classic Snake, HTML, CSS, JavaScript, Arcade, Free PC Games Hub, free games" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <!-- Open Graph / Facebook Meta Tags -->
   <meta property="og:url" content="https://free-pc-games-hub.vercel.app/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Classic Snake Game" />
   <meta property="og:description" content="Play the Classic Snake Game online at Free PC Games Hub. Enjoy addictive gameplay and a nostalgic arcade experience built with HTML, CSS, and JavaScript." />
   <meta property="og:image" content="https://free-pc-games-hub.vercel.app/" />
-  
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://free-pc-games-hub.vercel.app/" />
@@ -21,18 +19,13 @@
   <meta name="twitter:image" content="https://free-pc-games-hub.vercel.app/" />
   <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/logo-design-technology-company-vector-illustration_1253202-7559.jpg?semt=ais_hybrid">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Canonical Link -->
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="canonical" href="https://free-pc-games-hub.vercel.app/" />
-
   <title>Classic Snake Game</title>
   <style>
-    /* Reset styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* Reset & basic styling */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: #222;
       color: #fff;
@@ -43,17 +36,9 @@
       justify-content: center;
       height: 100vh;
     }
-    h1 {
-      margin-bottom: 20px;
-    }
-    #gameCanvas {
-      border: 2px solid #fff;
-      background: #000;
-    }
-    .info {
-      margin: 20px;
-      text-align: center;
-    }
+    h1 { margin-bottom: 20px; }
+    #gameCanvas { border: 2px solid #fff; background: #000; }
+    .info { margin: 20px; text-align: center; }
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -64,13 +49,67 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    button:hover {
-      background: #ddd;
+    button:hover { background: #ddd; }
+    
+    /* Modal Popup with Gradient Background & Scrollable Ranking List */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #rankingList {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #rankingList li {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+    #rankingList li img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    #rankingUserAuth {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #googleSignInButtonModal {
+      display: inline-block;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Classic Snake Game</h1>
   <nav class="fixed top-0 z-50 bg-white border-gray-200 dark:bg-gray-900 w-full">
     <div class="flex flex-wrap items-center justify-between mx-3 py-2">
       <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -86,7 +125,7 @@
       <div class="hidden w-full md:block md:w-auto" id="navbar-default">
         <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 mr-10 border border-gray-100 rounded-lg bg-white md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <li>
-            <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-black md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
+            <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
           </li>
           <li>
             <a href="blogs.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Blogs</a>
@@ -101,105 +140,197 @@
             <a href="carrace.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Car Race Game</a>
           </li>
            <li>
-            <a href="snake.html" class="cursor-pointer block py-2 px-3 text-blue-700 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Classical Snake Game</a>
+            <a href="snake.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Classical Snake Game</a>
           </li>
           
         </ul>
       </div>
     </div>
   </nav>
-  
-  <canvas id="gameCanvas" class="mt-10" width="400" height="400"></canvas>
+  <h1 class="mt-20 text-2xl font-bold my-1"></h1>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
   <div class="info">
     <p id="score">Score: 0</p>
-    <button id="restartBtn" style="display:none;" class="p-3 hover:text-black">Restart Game</button>
+    <button id="restartBtn" style="display:none;" class="p-2 bg-gray-100 text-black text-sm">Restart Game</button>
+  </div>
+  
+  <!-- Ranking Modal Popup -->
+  <div id="rankingModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="modalClose">&times;</span>
+      <h2>Ranking</h2>
+      <!-- Sign In prompt (shown if user is not authenticated) -->
+      <div id="rankingUserAuth">
+        <p>Please sign in to see your ranking:</p>
+        <div id="googleSignInButtonModal"></div>
+      </div>
+      <!-- Ranking list (displayed after sign in) -->
+      <ul id="rankingList" style="display:none;"></ul>
+    </div>
   </div>
   
   <script>
-    // Get canvas and context
+    // ----------------------------
+    // Google Sign-In Integration for Modal
+    // ----------------------------
+    let currentUserName = "Guest"; // Default if not signed in
+    let currentUserImage = "https://via.placeholder.com/40?text=Guest";
+    
+    // Simple JWT decoder
+    function parseJwt(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+    
+    // Callback when sign-in is successful
+    function handleCredentialResponse(response) {
+      const data = parseJwt(response.credential);
+      currentUserName = data.name || "User";
+      currentUserImage = data.picture || currentUserImage;
+      // Hide sign-in prompt and show ranking
+      document.getElementById('rankingUserAuth').style.display = 'none';
+      populateRankingList();
+    }
+    
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: '616967030280-284q4hfp1im4mfuleh1o1frogvdt7b9r.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("googleSignInButtonModal"),
+        { theme: "outline", size: "large" }
+      );
+    };
+    
+    // ----------------------------
+    // Classic Snake Game Code
+    // ----------------------------
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('score');
     const restartBtn = document.getElementById('restartBtn');
     
     const gridSize = 20;
-    const canvasSize = canvas.width; // 400 pixels
+    const canvasSize = canvas.width;
     let snake, food, dx, dy, score, gameInterval;
     
-    // Initialize the game
     function init() {
-      snake = [{x: 200, y: 200}]; // start at center
-      dx = gridSize;  // moving to right initially
+      snake = [{x: 200, y: 200}];
+      dx = gridSize;
       dy = 0;
       score = 0;
       spawnFood();
       scoreEl.textContent = 'Score: ' + score;
       if (gameInterval) clearInterval(gameInterval);
-      gameInterval = setInterval(gameLoop, 100); // update every 100ms
+      gameInterval = setInterval(gameLoop, 100);
       restartBtn.style.display = 'none';
+      // Hide the ranking modal if visible
+      document.getElementById('rankingModal').style.display = 'none';
     }
     
-    // Spawn food at a random grid position
     function spawnFood() {
       food = {
         x: Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize,
         y: Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize
       };
-      // Ensure food doesn't spawn on the snake
       if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
         spawnFood();
       }
     }
     
-    // Main game loop
     function gameLoop() {
-      // Move snake's head
       const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-      
-      // Check wall collision
-      if (head.x < 0 || head.x >= canvasSize || head.y < 0 || head.y >= canvasSize) {
+      if (head.x < 0 || head.x >= canvasSize || head.y < 0 || head.y >= canvasSize ||
+          snake.some(segment => segment.x === head.x && segment.y === head.y)) {
         gameOver();
         return;
       }
-      
-      // Check self collision
-      if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-        gameOver();
-        return;
-      }
-      
-      snake.unshift(head); // add new head
-      
-      // Check if snake eats food
+      snake.unshift(head);
       if (head.x === food.x && head.y === food.y) {
         score += 10;
         scoreEl.textContent = 'Score: ' + score;
         spawnFood();
       } else {
-        snake.pop(); // remove tail if no food eaten
+        snake.pop();
       }
-      
       draw();
     }
     
-    // Draw the game elements
     function draw() {
-      // Clear canvas
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw snake
       ctx.fillStyle = '#0f0';
-      snake.forEach(segment => {
-        ctx.fillRect(segment.x, segment.y, gridSize - 2, gridSize - 2);
-      });
-      
-      // Draw food
+      snake.forEach(segment => ctx.fillRect(segment.x, segment.y, gridSize - 2, gridSize - 2));
       ctx.fillStyle = '#f00';
       ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
     }
     
-    // Game over function
+    // ----------------------------
+    // Ranking List Generation & Sorting
+    // ----------------------------
+    function populateRankingList() {
+      const rankingList = document.getElementById('rankingList');
+      rankingList.innerHTML = '';
+      
+      // Dummy list of Indian names for ranking entries
+      const indianNames = ["Amit", "Raj", "Sunita", "Priya", "Vikram", "Ravi", "Anita", "Sanjay", "Deepak", "Rohit", "Neha", "Kiran", "Pooja", "Manish", "Suresh"];
+      let dummyEntries = [];
+      // Filter out the current user's name if present
+      let availableNames = indianNames.filter(name => name !== currentUserName);
+      
+      // Create 9 dummy entries with random scores (in multiples of 10 between 10 and 400)
+      for (let i = 0; i < 9; i++) {
+        if (availableNames.length === 0) break;
+        const index = Math.floor(Math.random() * availableNames.length);
+        const name = availableNames[index];
+        availableNames.splice(index, 1);
+        const randomScore = (Math.floor(Math.random() * 40) + 1) * 10;
+        dummyEntries.push({
+          name: name,
+          image: `https://i.pravatar.cc/40?img=${Math.floor(Math.random() * 70) + 1}`,
+          score: randomScore
+        });
+      }
+      
+      // Current user's entry with their actual game score
+      const userEntry = {
+        name: currentUserName,
+        image: currentUserImage,
+        score: score
+      };
+      
+      // Combine entries and sort them descending by score (highest score at the top)
+      const allEntries = dummyEntries.concat(userEntry);
+      allEntries.sort((a, b) => b.score - a.score);
+      
+      // Populate the ranking list with ranking number, profile image, name, and score
+      allEntries.forEach((entry, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<img src="${entry.image}" alt="${entry.name}"> <span>${idx + 1}. ${entry.name} - Score: ${entry.score}</span>`;
+        rankingList.appendChild(li);
+      });
+      
+      rankingList.style.display = 'block';
+    }
+    
+    function displayRankingModal() {
+      const modal = document.getElementById('rankingModal');
+      modal.style.display = 'block';
+      // If the user hasn't signed in, show the auth prompt
+      if (currentUserName === "Guest") {
+        document.getElementById('rankingUserAuth').style.display = 'block';
+        document.getElementById('rankingList').style.display = 'none';
+      } else {
+        document.getElementById('rankingUserAuth').style.display = 'none';
+        populateRankingList();
+      }
+    }
+    
     function gameOver() {
       clearInterval(gameInterval);
       ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -209,30 +340,25 @@
       ctx.textAlign = 'center';
       ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2);
       restartBtn.style.display = 'block';
+      displayRankingModal();
     }
     
-    // Listen for arrow keys to change direction
+    // Close the modal when "×" is clicked
+    document.getElementById('modalClose').addEventListener('click', function() {
+      document.getElementById('rankingModal').style.display = 'none';
+    });
+    
+    // Listen for arrow keys to change snake direction
     document.addEventListener('keydown', (e) => {
       switch(e.key) {
-        case 'ArrowUp':
-          if (dy === 0) { dx = 0; dy = -gridSize; }
-          break;
-        case 'ArrowDown':
-          if (dy === 0) { dx = 0; dy = gridSize; }
-          break;
-        case 'ArrowLeft':
-          if (dx === 0) { dx = -gridSize; dy = 0; }
-          break;
-        case 'ArrowRight':
-          if (dx === 0) { dx = gridSize; dy = 0; }
-          break;
+        case 'ArrowUp':   if (dy === 0) { dx = 0; dy = -gridSize; } break;
+        case 'ArrowDown': if (dy === 0) { dx = 0; dy = gridSize; } break;
+        case 'ArrowLeft': if (dx === 0) { dx = -gridSize; dy = 0; } break;
+        case 'ArrowRight':if (dx === 0) { dx = gridSize; dy = 0; } break;
       }
     });
     
-    // Restart button handler
     restartBtn.addEventListener('click', init);
-    
-    // Start the game
     init();
   </script>
 </body>
