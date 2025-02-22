@@ -34,7 +34,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
     }
     h1 { margin-bottom: 20px; }
     #gameCanvas { border: 2px solid #fff; background: #000; }
@@ -107,6 +107,29 @@
       display: inline-block;
       margin-top: 10px;
     }
+    /* Mobile controls styling */
+    #mobile-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    #mobile-controls .row {
+      display: flex;
+      justify-content: center;
+      margin: 5px;
+    }
+    #mobile-controls button {
+      padding: 15px;
+      font-size: 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      color: #222;
+      width: 60px;
+      height: 60px;
+    }
   </style>
 </head>
 <body>
@@ -136,13 +159,12 @@
           <li>
             <a href="ticktack.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">TickTack Game</a>
           </li>
-            <li>
+          <li>
             <a href="carrace.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Car Race Game</a>
           </li>
-           <li>
+          <li>
             <a href="snake.html" class="cursor-pointer block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Classical Snake Game</a>
           </li>
-          
         </ul>
       </div>
     </div>
@@ -152,6 +174,16 @@
   <div class="info">
     <p id="score">Score: 0</p>
     <button id="restartBtn" style="display:none;" class="p-2 bg-gray-100 text-black text-sm">Restart Game</button>
+  </div>
+  
+  <!-- Mobile Controls for Game -->
+  <div id="mobile-controls">
+    <button id="up-btn">↑</button>
+    <div class="row">
+      <button id="left-btn">←</button>
+      <button id="right-btn">→</button>
+    </div>
+    <button id="down-btn">↓</button>
   </div>
   
   <!-- Ranking Modal Popup -->
@@ -170,6 +202,17 @@
   </div>
   
   <script>
+    // ----------------------------
+    // Mobile Navigation Toggle
+    // ----------------------------
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButton = document.querySelector('[data-collapse-toggle]');
+      const navMenu = document.getElementById('navbar-default');
+      toggleButton.addEventListener('click', function() {
+        navMenu.classList.toggle('hidden');
+      });
+    });
+    
     // ----------------------------
     // Google Sign-In Integration for Modal
     // ----------------------------
@@ -270,6 +313,35 @@
       ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
     }
     
+    // Helper function to change snake direction for both keyboard and mobile controls
+    function changeDirection(direction) {
+      switch(direction) {
+        case 'up':    if (dy === 0) { dx = 0; dy = -gridSize; } break;
+        case 'down':  if (dy === 0) { dx = 0; dy = gridSize; } break;
+        case 'left':  if (dx === 0) { dx = -gridSize; dy = 0; } break;
+        case 'right': if (dx === 0) { dx = gridSize; dy = 0; } break;
+      }
+    }
+    
+    // Listen for arrow keys to change snake direction (desktop)
+    document.addEventListener('keydown', (e) => {
+      switch(e.key) {
+        case 'ArrowUp':    changeDirection('up'); break;
+        case 'ArrowDown':  changeDirection('down'); break;
+        case 'ArrowLeft':  changeDirection('left'); break;
+        case 'ArrowRight': changeDirection('right'); break;
+      }
+    });
+    
+    // Mobile controls event listeners
+    document.getElementById('up-btn').addEventListener('click', () => changeDirection('up'));
+    document.getElementById('down-btn').addEventListener('click', () => changeDirection('down'));
+    document.getElementById('left-btn').addEventListener('click', () => changeDirection('left'));
+    document.getElementById('right-btn').addEventListener('click', () => changeDirection('right'));
+    
+    restartBtn.addEventListener('click', init);
+    init();
+    
     // ----------------------------
     // Ranking List Generation & Sorting
     // ----------------------------
@@ -347,19 +419,6 @@
     document.getElementById('modalClose').addEventListener('click', function() {
       document.getElementById('rankingModal').style.display = 'none';
     });
-    
-    // Listen for arrow keys to change snake direction
-    document.addEventListener('keydown', (e) => {
-      switch(e.key) {
-        case 'ArrowUp':   if (dy === 0) { dx = 0; dy = -gridSize; } break;
-        case 'ArrowDown': if (dy === 0) { dx = 0; dy = gridSize; } break;
-        case 'ArrowLeft': if (dx === 0) { dx = -gridSize; dy = 0; } break;
-        case 'ArrowRight':if (dx === 0) { dx = gridSize; dy = 0; } break;
-      }
-    });
-    
-    restartBtn.addEventListener('click', init);
-    init();
   </script>
 </body>
 </html>
