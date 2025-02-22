@@ -107,28 +107,14 @@
       display: inline-block;
       margin-top: 10px;
     }
-    /* Mobile controls styling */
+    /* Mobile Controls Styling: Only visible on mobile screens */
     #mobile-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
+      display: block;
     }
-    #mobile-controls .row {
-      display: flex;
-      justify-content: center;
-      margin: 5px;
-    }
-    #mobile-controls button {
-      padding: 15px;
-      font-size: 20px;
-      margin: 5px;
-      border: none;
-      border-radius: 50%;
-      background: #fff;
-      color: #222;
-      width: 60px;
-      height: 60px;
+    @media (min-width: 640px) {
+      #mobile-controls {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -139,6 +125,7 @@
           <img src="https://img.freepik.com/premium-vector/logo-design-technology-company-vector-illustration_1253202-7559.jpg?semt=ais_hybrid" class="h-10" alt="Flowbite Logo" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span>
       </a>
+      <!-- Mobile navigation toggle button, hidden on desktop -->
       <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
           <span class="sr-only">Open main menu</span>
           <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
@@ -176,15 +163,15 @@
     <button id="restartBtn" style="display:none;" class="p-2 bg-gray-100 text-black text-sm">Restart Game</button>
   </div>
   
-  <!-- Mobile Controls for Game -->
- <div id="mobile-controls" class="block sm:hidden">
-  <button id="up-btn">↑</button>
-  <div class="row">
-    <button id="left-btn">←</button>
-    <button id="right-btn">→</button>
+  <!-- Mobile Controls for Game (only visible on mobile screens) -->
+  <div id="mobile-controls">
+    <button id="up-btn">↑</button>
+    <div class="row">
+      <button id="left-btn">←</button>
+      <button id="right-btn">→</button>
+    </div>
+    <button id="down-btn">↓</button>
   </div>
-  <button id="down-btn">↓</button>
-</div>
   
   <!-- Ranking Modal Popup -->
   <div id="rankingModal" class="modal">
