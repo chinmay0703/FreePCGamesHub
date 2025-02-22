@@ -107,15 +107,7 @@
       display: inline-block;
       margin-top: 10px;
     }
-    /* Mobile Controls Styling: Only visible on mobile screens */
-    #mobile-controls {
-      display: block;
-    }
-    @media (min-width: 640px) {
-      #mobile-controls {
-        display: none;
-      }
-    }
+   
   </style>
 </head>
 <body>
@@ -164,13 +156,27 @@
   </div>
   
   <!-- Mobile Controls for Game (only visible on mobile screens) -->
-  <div id="mobile-controls">
-    <button id="up-btn">↑</button>
-    <div class="row">
-      <button id="left-btn">←</button>
-      <button id="right-btn">→</button>
+  <div class="fixed bottom-4 left-0 right-0 px-4 md:hidden block">
+    <div class="flex justify-between">
+      <!-- Left Group -->
+      <div class="grid gap-4">
+        <button id="up-btn" style="background: rgba(255, 255, 255, 0.2);" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md">
+          ↑
+        </button>
+        <button id="left-btn" style="background: rgba(255, 255, 255, 0.2);" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md">
+          ←
+        </button>
+      </div>
+      <!-- Right Group -->
+      <div class="grid gap-4">
+        <button id="right-btn" style="background: rgba(255, 255, 255, 0.2);" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md">
+          →
+        </button>
+        <button id="down-btn"  style="background: rgba(255, 255, 255, 0.2);" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md">
+          ↓
+        </button>
+      </div>
     </div>
-    <button id="down-btn">↓</button>
   </div>
   
   <!-- Ranking Modal Popup -->
